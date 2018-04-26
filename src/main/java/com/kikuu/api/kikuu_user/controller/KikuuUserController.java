@@ -1,45 +1,66 @@
 package com.kikuu.api.kikuu_user.controller;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kikuu.api.kikuu_user.collection.KikuuUserDocument;
 import com.kikuu.api.kikuu_user.service.KikuuService;
-import com.kikuu.api.kikuu_user.address.KikuuAddress;
-import com.kikuu.api.kikuu_user.email.KikuuEmail;
+
+
 
 @RestController
-@RequestMapping("/")
 public class KikuuUserController {
 
 	@Autowired
 	KikuuService ks;
-	
-	@GetMapping
+	@Autowired
+	PasswordEncoder encoder;
+	@RequestMapping("/api")
 	public KikuuUserDocument save() {
-		List<KikuuEmail> list = new ArrayList<>();
-		list.add(new KikuuEmail("richard@king.com"));
-		KikuuUserDocument kd = new KikuuUserDocument(null,"Richard King"+ new Random(), "123456bdfd","654964646464",
-				                                   new KikuuAddress("Address 1","my City", "My Country","my PostCode"),
-				                                   list
-				                                   );
+        ks.deleteAll();
+        Set<String>roles = new HashSet<>();
+        roles.addAll(Arrays.asList("ROLE_USER","ROLE_ADMIN"));
+		KikuuUserDocument kd = new KikuuUserDocument();
+		kd.setUsername("richard");
+		kd.setPasscode("9000");
+		kd.setRoles(roles);
+		//kd.setPasscode("richard");
+		kd.setPassword(encoder.encode("richard"));
 		Integer result = ks.save(kd);
 		if(result != null) return kd;
 		return null;
 	}
 	
-	@GetMapping("/all")
+	@GetMapping("/doc")
 	public List<KikuuUserDocument> getAll(){
 		return ks.getAll();
 	}
 	
-	@GetMapping("/error")
-	public List<KikuuUserDocument> error(){
-		return ks.getAll();
+	@GetMapping("/register/{username}/{password}")
+	public KikuuUserDocument login(@PathVariable(name="username",required=false) String username, @PathVariable(name="password",required=false) String password) {
+        	System.out.println(username + " "+ password);
+			return  ks.login(username, password);
+
 	}
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(Model model, String error, String logout) {
+        if (error != null)
+            model.addAttribute("error", "Your username and password is invalid.");
+
+        if (logout != null)
+            model.addAttribute("message", "You have been logged out successfully.");
+
+        return "login";
+    }
 }

@@ -6,4 +6,5 @@ import com.kikuu.api.kikuu_user.collection.KikuuUserDocument;
 
 public interface KikuuRepository extends MongoRepository<KikuuUserDocument, String> {
 	KikuuUserDocument findByUsername(String username);
+	KikuuUserDocument findByUsernameAndPassword(String username,String password);
 }

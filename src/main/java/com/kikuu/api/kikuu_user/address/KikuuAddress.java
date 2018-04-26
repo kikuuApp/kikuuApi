@@ -2,13 +2,19 @@ package com.kikuu.api.kikuu_user.address;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+@Document
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class KikuuAddress implements Serializable{
     private static final long serialVersionUID=1L;
 
    
 	private String firstAddress;
     private String secondAddress;
-    private Double []location;
+    private Double lng;
+    private Double ltd;
     private String state;
     private String region;
     private String city;
@@ -17,35 +23,67 @@ public class KikuuAddress implements Serializable{
 
     
     
-    /***
-     * KikuuAddress
-     * 
-     * @param firstAddress
-     * @param secondAddress
-     * @param []location
-     * @param state
-     * @param region
-     * @param city
-     * @param country
-     * @param postCode
-     */
-    public KikuuAddress(String firstAddress, 
-                        String secondAddress, 
-                        Double[] location, 
-                        String state, 
-                        String region,
-                        String city, 
-                        String country, 
-                        String postCode) {
+	/**
+	 * 
+	 * @param firstAddress
+	 * @param secondAddress
+	 * @param lng
+	 * @param ltd
+	 * @param state
+	 * @param region
+	 * @param city
+	 * @param country
+	 * @param postCode
+	 */
+    public KikuuAddress(String firstAddress,
+    		            String secondAddress, 
+    		            Double lng, 
+    		            Double ltd, 
+    		            String state, 
+    		            String region,
+			            String city, 
+			            String country, 
+			            String postCode) {
+		super();
 		this.firstAddress = firstAddress;
 		this.secondAddress = secondAddress;
-		this.location = location;
+		this.lng = lng;
+		this.ltd = ltd;
 		this.state = state;
 		this.region = region;
 		this.city = city;
 		this.country = country;
 		this.postCode = postCode;
-    }
+	}
+
+	/**
+	 * 
+	 * @param firstAddress
+	 * @param secondAddress
+	 * @param state
+	 * @param region
+	 * @param city
+	 * @param country
+	 * @param postCode
+	 */
+    public KikuuAddress(String firstAddress, 
+    		            String secondAddress, 
+    		            String state, 
+    		            String region,
+			            String city, 
+			            String country, 
+			            String postCode) {
+		super();
+		this.firstAddress = firstAddress;
+		this.secondAddress = secondAddress;
+		this.state = state;
+		this.region = region;
+		this.city = city;
+		this.country = country;
+		this.postCode = postCode;
+	}
+
+   
     
     public KikuuAddress(){}
     
@@ -94,19 +132,23 @@ public class KikuuAddress implements Serializable{
         this.secondAddress = secondAddress;
     }
 
-    /**
-     * @return the location
-     */
-    public Double[] getLocation() {
-        return location;
-    }
-    /**
-     * @param location the location to set
-     */
-    public void setLocation(Double[] location) {
-        this.location = location;
-    }
-    /**
+	public Double getLng() {
+		return lng;
+	}
+
+	public void setLng(Double lng) {
+		this.lng = lng;
+	}
+
+	public Double getLtd() {
+		return ltd;
+	}
+
+	public void setLtd(Double ltd) {
+		this.ltd = ltd;
+	}
+
+	/**
      * @return the state
      */
     public String getState() {

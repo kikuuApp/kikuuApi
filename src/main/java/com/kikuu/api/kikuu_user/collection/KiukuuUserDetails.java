@@ -1,8 +1,11 @@
 package com.kikuu.api.kikuu_user.collection;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -31,44 +34,39 @@ public class KiukuuUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<SimpleGrantedAuthority> auths = new HashSet<>();
+		user.getRoles().stream().forEach(x -> auths.add( new SimpleGrantedAuthority(x)));
+		return auths;
 	}
 
 	@Override
 	public String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
+		return user.getPasscode();
 	}
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
+		return user.getUsername();
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

@@ -62,4 +62,11 @@ public class KikuuService implements IGenericService<KikuuUserDocument,Integer>{
 		return null;
 	}
 
+	public KikuuUserDocument login(String username, String password) {
+		return kikuurepo.findByUsernameAndPassword(username, password);
+	}
+
+	public void deleteAll(){
+		kikuurepo.deleteAll();
+	}
 }

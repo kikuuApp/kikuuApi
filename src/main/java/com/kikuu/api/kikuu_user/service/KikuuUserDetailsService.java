@@ -18,13 +18,13 @@ public class KikuuUserDetailsService implements UserDetailsService {
 	
 	public KikuuUserDetailsService() {}
 
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
           KikuuUserDocument user = repo.findByUsername(username);
-          if(user == null) {
-        	  throw new UsernameNotFoundException(username);
-          }
+          if(user == null) throw new UsernameNotFoundException("Username not found "+username);
           return new KiukuuUserDetails(user);
 	}
 
 }
+
