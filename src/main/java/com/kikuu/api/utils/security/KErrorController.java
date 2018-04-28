@@ -1,4 +1,4 @@
-package com.kikuu.api.kikuu_user.controller;
+package com.kikuu.api.utils.security;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +17,7 @@ public class KErrorController implements ErrorController {
 
 	@Autowired
 	KikuuService ks;
+	private static String PATH="/error";
 	
 	@GetMapping
 	public String error(HttpServletRequest req){
@@ -25,7 +26,6 @@ public class KErrorController implements ErrorController {
 
 	@Override
 	public String getErrorPath() {
-		// TODO Auto-generated method stub
-		return "user error";
+		return PATH;
 	}
 }

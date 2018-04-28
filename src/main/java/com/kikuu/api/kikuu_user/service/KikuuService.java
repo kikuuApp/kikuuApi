@@ -28,42 +28,36 @@ public class KikuuService implements IGenericService<KikuuUserDocument,Integer>{
 
 	@Override
 	public KikuuUserDocument update(KikuuUserDocument c) throws MongoException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Integer delete(KikuuUserDocument c) throws MongoException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Integer deleteAll(List<KikuuUserDocument> tcs) throws MongoException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<KikuuUserDocument> getByPagination(Integer limit, Integer offset) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<KikuuUserDocument> getAll() {
-		// TODO Auto-generated method stub
 		return kikuurepo.findAll();
 	}
 
 	@Override
 	public KikuuUserDocument get(KikuuUserDocument c) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public KikuuUserDocument login(String username, String password) {
-		return kikuurepo.findByUsernameAndPassword(username, password);
+	public KikuuUserDocument login(String username) {
+		return kikuurepo.findByUsername(username);
 	}
 
 	public void deleteAll(){

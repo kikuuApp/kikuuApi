@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.kikuu.api.kikuu_user.service.KikuuUserDetailsService;
@@ -21,20 +21,23 @@ public class KikuuSecurity extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	KikuuUserDetailsService kudService;
-	
+	@Autowired
+	RestAuthenticationProvider aup;
 	 @Override
 	    protected void configure(HttpSecurity http) throws Exception {
 	        http
 	            .authorizeRequests()
-					.antMatchers("/api/**","/login").permitAll()
-					.anyRequest()
-	                .authenticated()
-					.and().formLogin()
-					.successForwardUrl("/doc")
-	                .permitAll()
-	                .and()
-	                .logout()
+					.antMatchers("/api/user/","/api/user/login","/api/user/auth","/api/user/doc").permitAll()
+					.antMatchers("/api/user/resgister","/api/user/find","/api/user/count").permitAll()
+                    .anyRequest()
+					.authenticated()
+					.antMatchers("/api/user/delete/","/api/user/update/")
+					.hasAnyRole("ROLE_USER","ROLE_USER_GRANTED")
+                    .and()
+                    .logout()
 	                .permitAll();
+	        
+	        http.csrf().disable().cors().disable();
 	                ///.antMatchers("/api", "/app").access("hasRole('USER')").anyRequest().authenticated();
 	                
 	                
@@ -56,7 +59,9 @@ public class KikuuSecurity extends WebSecurityConfigurerAdapter{
 	 
 	 @Bean
 	 public PasswordEncoder encoder() {
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+			PasswordEncoder encoder = new BCryptPasswordEncoder();
+			return encoder;
+
 	 }
 
 }
