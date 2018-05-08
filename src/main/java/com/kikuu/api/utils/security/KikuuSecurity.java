@@ -28,7 +28,7 @@ public class KikuuSecurity extends WebSecurityConfigurerAdapter{
 	        http
 	            .authorizeRequests()
 					.antMatchers("/api/user/","/api/user/login","/api/user/auth","/api/user/doc").permitAll()
-					.antMatchers("/api/user/resgister","/api/user/find","/api/user/count").permitAll()
+					.antMatchers("/api/user/register","/api/user/find","/api/user/count").permitAll()
                     .anyRequest()
 					.authenticated()
 					.antMatchers("/api/user/delete/","/api/user/update/")

@@ -1,13 +1,12 @@
 package com.kikuu.api.kikuu_user.controller;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,39 +29,18 @@ import com.kikuu.api.utils.json.KikuuPayload;
 public class KikuuUserController implements IGenericKikuuController<KikuuUserDocument,String,Integer> {
 
 	@Autowired
-	KikuuService ks;
+	KikuuService kikuuService;
 
+    Logger logger = LoggerFactory.getLogger(KikuuUserController.class);
 	@Autowired
 	PasswordEncoder encoder;
 	
-	@RequestMapping
-	public KikuuUserDocument save() {
-        ks.deleteAll();
-        Set<String>roles = new HashSet<>();
-        roles.addAll(Arrays.asList("ROLE_USER","ROLE_ADMIN"));
-		KikuuUserDocument kd = new KikuuUserDocument();
-		kd.setUsername("richard");
-		kd.setPasscode("9000");
-		kd.setRoles(roles);
-		//kd.setPasscode("richard");
-		String pwd =encoder.encode("richard");
-		kd.setPassword(pwd);
-		Integer result = ks.save(kd);
-		if(result != null) return kd;
-		return null;
-	}
-	
-	@GetMapping("/doc")
-	public List<KikuuUserDocument> getAll(){
-		return ks.getAll();
-	}
-
 
     @PostMapping(value = "/login")
     public String login(@RequestBody KikuuUserDocument doc, HttpServletRequest request, HttpServletResponse response) throws ServletException {
-    	KikuuUserDocument user = ks.login(doc.getUsername());
+    	KikuuUserDocument user = kikuuService.login(doc.getUsername());
     	String d = user.getPassword();
-    	 if(encoder.matches("richard", d)){
+    	 if(encoder.matches(doc.getPassword(), d)){
     		 request.login(doc.getUsername(), doc.getPassword());
     	 }else {
     		return "User credentials error, Please check and try again";
@@ -70,11 +48,22 @@ public class KikuuUserController implements IGenericKikuuController<KikuuUserDoc
          return user.getUsername();
     }
 
-	@PostMapping("/register")
+	@PostMapping(value="/register")
 	@Override
 	public KikuuPayload<KikuuUserDocument> register(@RequestBody KikuuUserDocument doc, HttpServletRequest req,
-			HttpServletResponse resp) {
-		return null;
+			HttpServletResponse resp) throws Exception{
+				KikuuUserDocument userDoc;
+			try{	
+				//@TODO just for developmet
+				kikuuService.deleteAll();
+
+				userDoc =	kikuuService.save(doc);
+				logger.debug("telephone %s registed @ %s",doc.getUsername(),new Date(System.currentTimeMillis()) );
+			}catch(Exception e){
+               throw e;
+			}
+		return new KikuuPayload<KikuuUserDocument>(200,true,"suscess",userDoc);
+		
 	}
 
     @PutMapping("/update")
@@ -84,8 +73,12 @@ public class KikuuUserController implements IGenericKikuuController<KikuuUserDoc
 	}
     @DeleteMapping("/delete")
 	@Override
-	public KikuuPayload<String> delete(@RequestBody KikuuUserDocument doc, HttpServletRequest req, HttpServletResponse resp) {
-		return null;
+	public KikuuPayload<String> delete(@RequestBody KikuuUserDocument doc, 
+							HttpServletRequest req, HttpServletResponse resp)throws Exception {
+		//Delete user
+		kikuuService.delete(doc);
+		logger.debug("User Account %s is deleted @ %s",doc.getUsername(),new Date(System.currentTimeMillis()) );
+		return new KikuuPayload<String>(200,true,"suscess","Account deleted");
 	}
     @GetMapping("/delete/{id}")
 	@Override

@@ -89,7 +89,6 @@ public class KikuuUserDocument implements Serializable{
 								 KikuuAddress address,
 								 String passcode,
 								 Set<String> roles
-								 //List<KikuuEmail> emails
 								
 								 ) {
 			this.id = id;
@@ -100,9 +99,30 @@ public class KikuuUserDocument implements Serializable{
 			this.email = email;
 			this.passcode = passcode;
 			this.roles = roles;
-			//this.emails = emails;
+
 		}
+	public KikuuUserDocument(String id, 
+			String username, 
+			String password, 
+			String email,
+			String telephone,
+			KikuuAddress address,
+			String passcode,
+			Set<String> roles,
+			List<KikuuEmail> emails
 		
+			) {
+	this.id = id;
+	this.username = username;
+	this.password = password;
+	this.telephone = telephone;
+	this.address = address;
+	this.email = email;
+	this.passcode = passcode;
+	this.roles = roles;
+	this.emails = emails;
+	}
+
 	public KikuuUserDocument() {}
    
 	/**
@@ -168,23 +188,7 @@ public class KikuuUserDocument implements Serializable{
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
-	
-	/**
-	 * 
-	 * @return Collection<GrantedAuthority>
-	 *//*
-	public Collection<? extends GrantedAuthority> getAuthority() {
-		return authority;
-	}
-	
-	*//**
-	 * 
-	 * @param authority
-	 *//*
-	public void setAuthority(Collection<? extends GrantedAuthority> authority) {
-		this.authority = authority;
-	}*/
-	
+
 	/**
 	 * 
 	 * @return address
@@ -234,20 +238,20 @@ public class KikuuUserDocument implements Serializable{
 	public void setPasscode(String passcode) {
 		this.passcode = passcode;
 	}
-/*	*//**
+	/*
 	 * 
 	 * @return List<email>emails
-	 *//*
+	 */
 	public List<KikuuEmail> getEmails() {
 		return emails;
 	}
 	
-	*//**
+	/**
 	 * 
 	 * @param List<email>
-	 *//*
+	 */
 	public void setEmails(List<KikuuEmail> emails) {
 		this.emails = emails;
-	}*/
+	}
 	
 }
